@@ -14,7 +14,7 @@
     "run": "npm run run:detect",
     "run:detect": "node -e \"console.log(process.platform === 'darwin' ? 'run:macos' : 'run:linux')\" | xargs npm run",
     "run:linux": "task || bun src/index.ts",
-    "run:macos": "bun src/index_macos.ts",
+    "run:macos": "bun src/simple_macos_terminal.ts",
     "task": "task"
   },
   "devDependencies": {

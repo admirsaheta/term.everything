@@ -147,10 +147,10 @@ export interface C_Interop {
   launch_application(bundle_id: string): any;
   
   // Desktop streaming functions
-  start_desktop_stream(callback: (data: Buffer, width: number, height: number, size: number) => void, quality: number): Promise<boolean>;
-  stop_desktop_stream(): Promise<boolean>;
+  start_desktop_stream(width: number, height: number, callback: (data: Buffer, width: number, height: number, size: number) => void): boolean;
+  stop_desktop_stream(): boolean;
   is_desktop_streaming(): boolean;
-  set_stream_quality(quality: number): Promise<boolean>;
+  set_stream_quality(quality: number): boolean;
 }
 
 export enum Get_FD_Flags {

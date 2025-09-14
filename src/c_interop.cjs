@@ -6,7 +6,7 @@ const path = require('path');
 const c_interop_node_path = () => {
   if (process.env['DEV'] !== undefined) {
     if (process.platform === "darwin") {
-      return path.resolve(__dirname, '../c_interop/build/interop.node');
+      return path.resolve(__dirname, '../lib/interop.node');
     } else {
       return "../deps/libinterop/lib/x86_64-linux-gnu/interop.node";
     }

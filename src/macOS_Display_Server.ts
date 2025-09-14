@@ -7,14 +7,14 @@
 
 import c from './c_interop.ts';
 // Type definitions for streaming
-interface StreamFrame {
+export interface StreamFrame {
     data: Buffer;
     width: number;
     height: number;
     size: number;
 }
 
-type StreamCallback = (frame: StreamFrame) => void;
+export type StreamCallback = (frame: StreamFrame) => void;
 
 export interface MacOSDisplayConfig {
   displayId?: number;
@@ -551,7 +551,7 @@ export class MacOSDisplayServer {
   /**
    * Start desktop streaming with callback
    */
-  async startDesktopStream(callback: StreamCallback, quality: number = 75): Promise<boolean> {
+  async startDesktopStream(callback: StreamCallback, width: number = 1920, height: number = 1080): Promise<boolean> {
     try {
       if (this.isStreaming) {
         console.warn('Desktop streaming is already active');
@@ -560,31 +560,33 @@ export class MacOSDisplayServer {
 
       this.streamCallback = callback;
       
-      // Set up the native callback to handle frame data
-      const frameHandler = (data: Buffer, width: number, height: number, size: number) => {
+      // Create a wrapper callback that matches the C interface
+      const cCallback = (data: Buffer, frameWidth: number, frameHeight: number, size: number) => {
         if (this.streamCallback) {
           this.streamCallback({
             data,
-            width,
-            height,
+            width: frameWidth,
+            height: frameHeight,
             size
           });
         }
       };
 
-      // Start the native streaming
-      const result = await c.start_desktop_stream(frameHandler, quality);
+      // Start streaming with specified resolution
+      const success = c.start_desktop_stream(width, height, cCallback);
       
-      if (result) {
+      if (success) {
         this.isStreaming = true;
-        console.log('Desktop streaming started successfully');
+        console.log(`Desktop streaming started successfully at ${width}x${height}`);
         return true;
       } else {
         console.error('Failed to start desktop streaming');
+        this.streamCallback = undefined;
         return false;
       }
     } catch (error) {
       console.error('Error starting desktop stream:', error);
+      this.streamCallback = undefined;
       return false;
     }
   }
@@ -599,7 +601,7 @@ export class MacOSDisplayServer {
         return false;
       }
 
-      const result = await c.stop_desktop_stream();
+      const result = c.stop_desktop_stream();
       
       if (result) {
         this.isStreaming = false;
@@ -633,7 +635,7 @@ export class MacOSDisplayServer {
         return false;
       }
 
-      const result = await c.set_stream_quality(quality);
+      const result = c.set_stream_quality(quality);
       
       if (result) {
         console.log(`Stream quality set to ${quality}`);
