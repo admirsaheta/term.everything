@@ -1,6 +1,7 @@
 #include "TermSize.h"
 
 #include <sys/ioctl.h> /* ioctl */
+#include <unistd.h> /* STDOUT_FILENO, STDERR_FILENO, STDIN_FILENO */
 
 TermSize::TermSize()
 {

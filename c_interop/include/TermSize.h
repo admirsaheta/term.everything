@@ -1,5 +1,13 @@
 #pragma once
+
+#ifdef __linux__
 #include <glib.h>
+#else
+// Use standard types for non-Linux platforms
+typedef int gint;
+typedef float gfloat;
+typedef double gdouble;
+#endif
 
 /**
  * @brief Gets the termsize from
