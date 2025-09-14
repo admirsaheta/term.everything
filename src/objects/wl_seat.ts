@@ -2,7 +2,6 @@ import { auto_release } from "../auto_release.ts";
 import { Global_Ids, global_objects } from "../GlobalObjects.ts";
 import {
   wl_seat_delegate as d,
-  wl_seat as w,
   wl_seat_capability,
   wl_seat_error,
 } from "../protocols/wayland.xml.ts";
@@ -38,14 +37,17 @@ export class wl_seat implements d {
     version
   ) => {
     this.version = version;
-    w.capabilities(
+    const { wl_seat: WlSeatProtocol } = require("../protocols/wayland.xml.ts");
+    WlSeatProtocol.capabilities(
       s,
       new_id,
       wl_seat_capability.pointer | wl_seat_capability.keyboard
     );
-    w.name(s, version, new_id, "seat0");
+    WlSeatProtocol.name(s, version, new_id, "seat0");
   };
-  static make(): w {
-    return new w(new wl_seat());
-  }
 }
+
+export const make_wl_seat = () => {
+  const { wl_seat: WlSeatProtocol } = require("../protocols/wayland.xml.ts");
+  return new WlSeatProtocol(new wl_seat());
+};

@@ -1,6 +1,5 @@
 import {
   wl_data_device_manager_delegate as d,
-  wl_data_device_manager as w,
 } from "../protocols/wayland.xml.ts";
 
 import { wl_data_device } from "./wl_data_device.ts";
@@ -25,7 +24,9 @@ export class wl_data_device_manager implements d {
   ) => {
     /** @TODO: Implement wl_data_device_manager_on_bind */
   };
-  static make(): w {
-    return new w(new wl_data_device_manager());
-  }
+}
+
+export function make_wl_data_device_manager() {
+  const { wl_data_device_manager: WlDataDeviceManagerProtocol } = require("../protocols/wayland.xml.ts");
+  return new WlDataDeviceManagerProtocol(new wl_data_device_manager());
 }

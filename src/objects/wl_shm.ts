@@ -1,7 +1,6 @@
 import { auto_release } from "../auto_release.ts";
 import {
   wl_shm_delegate as d,
-  wl_shm as w,
   wl_shm_format,
 } from "../protocols/wayland.xml.ts";
 import { wl_shm_pool } from "./wl_shm_pool.ts";
@@ -27,9 +26,12 @@ export class wl_shm implements d {
    */
   wl_shm_release: d["wl_shm_release"] = auto_release;
   wl_shm_on_bind: d["wl_shm_on_bind"] = (s, _name, _interface_, new_id) => {
-    w.format(s, new_id, wl_shm_format.argb8888);
+    const { wl_shm: WlShmProtocol } = require("../protocols/wayland.xml.ts");
+    WlShmProtocol.format(s, new_id, wl_shm_format.argb8888);
   };
-  static make(): w {
-    return new w(new wl_shm());
-  }
+}
+
+export function make_wl_shm() {
+  const { wl_shm: WlShmProtocol } = require("../protocols/wayland.xml.ts");
+  return new WlShmProtocol(new wl_shm());
 }

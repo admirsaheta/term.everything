@@ -1,7 +1,6 @@
 import { Global_Ids } from "../GlobalObjects.ts";
 import {
   xwayland_shell_v1_delegate as d,
-  xwayland_shell_v1 as w,
   xwayland_shell_v1_error,
 } from "../protocols/wayland.xml.ts";
 
@@ -60,7 +59,9 @@ export class xwayland_shell_v1 implements d {
     _new_id,
     _version_number
   ) => {};
-  static make(): w {
-    return new w(new xwayland_shell_v1());
-  }
+}
+
+export function make_xwayland_shell_v1() {
+  const { xwayland_shell_v1: XwaylandShellV1Protocol } = require("../protocols/wayland.xml.ts");
+  return new XwaylandShellV1Protocol(new xwayland_shell_v1());
 }

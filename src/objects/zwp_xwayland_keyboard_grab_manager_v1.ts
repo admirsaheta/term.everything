@@ -1,7 +1,6 @@
 import { Global_Ids } from "../GlobalObjects.ts";
 import {
   zwp_xwayland_keyboard_grab_manager_v1_delegate as d,
-  zwp_xwayland_keyboard_grab_manager_v1 as w,
 } from "../protocols/wayland.xml.ts";
 import { zwp_xwayland_keyboard_grab_v1 } from "./zwp_xwayland_keyboard_grab_v1.ts";
 
@@ -23,7 +22,9 @@ export class zwp_xwayland_keyboard_grab_manager_v1 implements d {
     };
   zwp_xwayland_keyboard_grab_manager_v1_on_bind: d["zwp_xwayland_keyboard_grab_manager_v1_on_bind"] =
     (_s, _name, _interface_, _new_id, _version_number) => {};
-  static make(): w {
-    return new w(new zwp_xwayland_keyboard_grab_manager_v1());
-  }
+}
+
+export function make_zwp_xwayland_keyboard_grab_manager_v1() {
+  const { zwp_xwayland_keyboard_grab_manager_v1: ZwpXwaylandKeyboardGrabManagerV1Protocol } = require("../protocols/wayland.xml.ts");
+  return new ZwpXwaylandKeyboardGrabManagerV1Protocol(new zwp_xwayland_keyboard_grab_manager_v1());
 }

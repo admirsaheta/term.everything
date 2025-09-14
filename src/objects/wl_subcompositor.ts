@@ -1,7 +1,6 @@
 import { auto_release } from "../auto_release.ts";
 import {
   wl_subcompositor_delegate,
-  wl_subcompositor as w,
   wl_subcompositor_error,
 } from "../protocols/wayland.xml.ts";
 import { wl_subsurface } from "./wl_subsurface.ts";
@@ -86,7 +85,9 @@ export class wl_subcompositor implements wl_subcompositor_delegate {
   wl_subcompositor_on_bind: wl_subcompositor_delegate["wl_subcompositor_on_bind"] =
     (_s, _name, _interface_, _new_id, _version) => {};
 
-  static make(): w {
-    return new w(new wl_subcompositor());
-  }
+}
+
+export function make_wl_subcompositor() {
+  const { wl_subcompositor: WlSubcompositorProtocol } = require("../protocols/wayland.xml.ts");
+  return new WlSubcompositorProtocol(new wl_subcompositor());
 }

@@ -83,24 +83,54 @@ export class Terminal_Window {
     desktop_size: Pixel_Size,
     will_show_app_right_at_startup: boolean
   ) {
-    this.canvas_desktop = new Canvas_Desktop(
-      desktop_size,
-      will_show_app_right_at_startup
-    );
-    this.virtual_monitor_size = desktop_size;
-    this.draw_state = c.init_draw_state(display_server_type.type === "x11");
+    try {
+      this.canvas_desktop = new Canvas_Desktop(
+        desktop_size,
+        will_show_app_right_at_startup
+      );
+      this.virtual_monitor_size = desktop_size;
+      this.draw_state = c.init_draw_state(display_server_type.type === "x11");
 
-    process.stdin.setRawMode(true);
-
-    if (!debug_turn_off_output()) {
-      process.stdout.write(Ansi_Escape_Codes.enable_alternative_screen_buffer);
+      // Set up terminal modes with error handling
+      this.initializeTerminalMode();
+      
+      on_exit(this.on_exit);
+    } catch (error) {
+      console.error("Error initializing Terminal_Window:", error);
+      throw error;
     }
+  }
 
-    process.stdout.write(Ansi_Escape_Codes.enable_mouse_tracking);
+  private initializeTerminalMode(): void {
+    try {
+      console.log("Setting raw mode...");
+      // Set raw mode first
+      process.stdin.setRawMode(true);
+      console.log("Raw mode set successfully");
 
-    process.stdout.write(Ansi_Escape_Codes.hide_cursor);
+      // Write ANSI escape codes with error handling
+      if (!debug_turn_off_output()) {
+        console.log("Writing alternative screen buffer...");
+        // Temporarily disable alternative screen buffer to test
+        // process.stdout.write(Ansi_Escape_Codes.enable_alternative_screen_buffer);
+        console.log("Skipping alternative screen buffer for now");
+      }
 
-    on_exit(this.on_exit);
+      console.log("Writing mouse tracking...");
+      process.stdout.write(Ansi_Escape_Codes.enable_mouse_tracking);
+      console.log("Writing hide cursor...");
+      process.stdout.write(Ansi_Escape_Codes.hide_cursor);
+      console.log("Terminal mode initialization completed");
+    } catch (error) {
+      console.error("Error initializing terminal mode:", error);
+      // Attempt cleanup on error
+      try {
+        process.stdin.setRawMode(false);
+      } catch (cleanupError) {
+        console.error("Error during cleanup:", cleanupError);
+      }
+      throw error;
+    }
   }
 
   on_exit = () => {

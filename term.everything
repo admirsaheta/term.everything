@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# term.everything - macOS launcher script
+# Similar to the Linux AppImage, this script allows you to run applications in the terminal
+
+# Set the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Change to the project directory
+cd "$SCRIPT_DIR"
+
+# Check if the native module is built
+if [ ! -f "c_interop/build/interop.node" ]; then
+    echo "Error: Native module not found. Please build the project first:"
+    echo "  npm run build:macos"
+    exit 1
+fi
+
+# Check if bun is available
+if ! command -v bun &> /dev/null; then
+    echo "Error: bun is required but not installed."
+    echo "Please install bun: https://bun.sh/"
+    exit 1
+fi
+
+# Run the application with DEV=1 and pass all arguments
+DEV=1 bun src/index_macos.ts "$@"

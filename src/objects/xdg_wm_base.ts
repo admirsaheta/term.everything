@@ -1,7 +1,6 @@
 import { auto_release } from "../auto_release.ts";
 import {
   xdg_wm_base_delegate,
-  xdg_wm_base as w,
   xdg_wm_base_error,
 } from "../protocols/wayland.xml.ts";
 import { version } from "../wayland_types.ts";
@@ -73,7 +72,9 @@ export class xdg_wm_base implements xdg_wm_base_delegate {
   ) => {
     this.version = version;
   };
-  static make(): w {
-    return new w(new xdg_wm_base());
-  }
+}
+
+export function make_xdg_wm_base() {
+  const { xdg_wm_base: XdgWmBaseProtocol } = require("../protocols/wayland.xml.ts");
+  return new XdgWmBaseProtocol(new xdg_wm_base());
 }

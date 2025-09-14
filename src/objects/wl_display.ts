@@ -1,7 +1,6 @@
 import { advertised_global_objects_names } from "../GlobalObjects.ts";
 import {
   wl_display_delegate as d,
-  wl_display as w,
   wl_registry as wl_registry_funcs,
   wl_callback,
 } from "../protocols/wayland.xml.ts";
@@ -30,7 +29,9 @@ export class wl_display implements d {
     _id,
     _version
   ) => {};
-  static make(): w {
-    return new w(new wl_display());
-  }
+}
+
+export function make_wl_display() {
+  const { wl_display: WlDisplayProtocol } = require("../protocols/wayland.xml.ts");
+  return new WlDisplayProtocol(new wl_display());
 }

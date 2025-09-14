@@ -1,7 +1,6 @@
 import { auto_release } from "../auto_release.ts";
 import {
   wl_output_delegate as d,
-  wl_output as w,
   wl_output_transform,
   wl_output_subpixel,
   wl_output_mode,
@@ -20,12 +19,13 @@ export class wl_output implements d {
     version
   ) => {
     this.version = version;
+    const { wl_output: WlOutputProtocol } = require("../protocols/wayland.xml.ts");
 
-    w.scale(s, version, new_id, 1);
-    w.name(s, version, new_id, "mon-os world");
-    w.description(s, version, new_id, "The best monitor");
+    WlOutputProtocol.scale(s, version, new_id, 1);
+    WlOutputProtocol.name(s, version, new_id, "mon-os world");
+    WlOutputProtocol.description(s, version, new_id, "The best monitor");
 
-    w.geometry(
+    WlOutputProtocol.geometry(
       s,
       new_id,
       0,
@@ -37,7 +37,7 @@ export class wl_output implements d {
       "The best model",
       wl_output_transform.normal
     );
-    w.mode(
+    WlOutputProtocol.mode(
       s,
       new_id,
       wl_output_mode.current,
@@ -45,9 +45,11 @@ export class wl_output implements d {
       virtual_monitor_size.height,
       60_000
     );
-    w.done(s, version, new_id);
+    WlOutputProtocol.done(s, version, new_id);
   };
-  static make(): w {
-    return new w(new wl_output());
-  }
+}
+
+export function make_wl_output() {
+  const { wl_output: WlOutputProtocol } = require("../protocols/wayland.xml.ts");
+  return new WlOutputProtocol(new wl_output());
 }

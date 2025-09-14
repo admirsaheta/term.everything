@@ -140,6 +140,17 @@ export interface C_Interop {
   };
 
   init_draw_state(session_type_is_x11: boolean): Draw_State;
+  
+  // macOS-specific functions
+  get_display_info(): any;
+  capture_display(display_id?: number): any;
+  launch_application(bundle_id: string): any;
+  
+  // Desktop streaming functions
+  start_desktop_stream(callback: (data: Buffer, width: number, height: number, size: number) => void, quality: number): Promise<boolean>;
+  stop_desktop_stream(): Promise<boolean>;
+  is_desktop_streaming(): boolean;
+  set_stream_quality(quality: number): Promise<boolean>;
 }
 
 export enum Get_FD_Flags {

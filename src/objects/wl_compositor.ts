@@ -1,6 +1,5 @@
 import {
   wl_compositor_delegate as d,
-  wl_compositor as w,
 } from "../protocols/wayland.xml.ts";
 
 import { wl_region } from "./wl_region.ts";
@@ -63,7 +62,9 @@ export class wl_compositor implements d {
     return;
   };
 
-  static make(): w {
-    return new w(new wl_compositor());
-  }
+}
+
+export function make_wl_compositor() {
+  const { wl_compositor: WlCompositorProtocol } = require("../protocols/wayland.xml.ts");
+  return new WlCompositorProtocol(new wl_compositor());
 }

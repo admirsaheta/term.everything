@@ -11,7 +11,9 @@
 export const c_interop_node_path = () => {
   const libraryPath =
     process.env['DEV'] !== undefined
-      ? __dirname + "/" + "../deps/libinterop/lib/x86_64-linux-gnu/interop.node"
+      ? process.platform === "darwin"
+        ? "./c_interop/build/interop.node"
+        : "../deps/libinterop/lib/x86_64-linux-gnu/interop.node"
       : "$ORIGIN/../lib/interop.node";
   return libraryPath;
 };

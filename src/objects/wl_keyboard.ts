@@ -1,6 +1,5 @@
 import {
   wl_keyboard_delegate as d,
-  wl_keyboard as w,
   wl_keyboard_keymap_format,
 } from "../protocols/wayland.xml.ts";
 import { Wayland_Client } from "../Wayland_Client.ts";
@@ -33,13 +32,14 @@ export class wl_keyboard implements d {
     _version
   ) => {};
 
-  after_get_keyboard = async (s: Wayland_Client, object_id: Object_ID<w>) => {
+  after_get_keyboard = async (s: Wayland_Client, object_id: Object_ID<any>) => {
     const fd_info = await this.key_map_fd;
     if (fd_info === null) {
       console.error("key_map_fd is null");
       return;
     }
-    w.keymap(
+    const { wl_keyboard: WlKeyboardProtocol } = require("../protocols/wayland.xml.ts");
+    WlKeyboardProtocol.keymap(
       s,
       object_id,
       wl_keyboard_keymap_format.xkb_v1,
@@ -48,7 +48,9 @@ export class wl_keyboard implements d {
     );
   };
 
-  static make(): w {
-    return new w(new wl_keyboard());
-  }
+}
+
+export function make_wl_keyboard() {
+  const { wl_keyboard: WlKeyboardProtocol } = require("../protocols/wayland.xml.ts");
+  return new WlKeyboardProtocol(new wl_keyboard());
 }

@@ -6,9 +6,15 @@
   },
   "type": "module",
   "scripts": {
-    "build": "task build",
+    "build": "npm run build:detect",
+    "build:detect": "node -e \"console.log(process.platform === 'darwin' ? 'build:macos' : 'build:linux')\" | xargs npm run",
+    "build:linux": "task build || echo 'Task not found, using meson directly' && cd c_interop && meson setup build && meson compile -C build",
+    "build:macos": "cd c_interop && meson setup build --cross-file=../resources/macos.cross && meson compile -C build",
     "bun": "bun",
-    "run": "task",
+    "run": "npm run run:detect",
+    "run:detect": "node -e \"console.log(process.platform === 'darwin' ? 'run:macos' : 'run:linux')\" | xargs npm run",
+    "run:linux": "task || bun src/index.ts",
+    "run:macos": "bun src/index_macos.ts",
     "task": "task"
   },
   "devDependencies": {

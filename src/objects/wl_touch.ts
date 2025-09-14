@@ -1,7 +1,6 @@
 import { auto_release } from "../auto_release.ts";
 import {
   wl_touch_delegate as d,
-  wl_touch as w,
 } from "../protocols/wayland.xml.ts";
 
 export class wl_touch implements d {
@@ -15,7 +14,9 @@ export class wl_touch implements d {
   ) => {
     /** @TODO: Implement wl_touch_on_bind */
   };
-  static make(): w {
-    return new w(new wl_touch());
-  }
+}
+
+export function make_wl_touch() {
+  const { wl_touch: WlTouchProtocol } = require("../protocols/wayland.xml.ts");
+  return new WlTouchProtocol(new wl_touch());
 }
